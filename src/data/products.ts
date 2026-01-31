@@ -1,0 +1,40 @@
+import { Product } from "@/components/ProductCard";
+
+export const products: Product[] = [
+  {
+    id: "1",
+    name: "The Transit Check-in Luggage Poly-Carbonate Hard Sided 8 Silent Ninja Wheels",
+    brand: "MOKOBARA",
+    price: 6999,
+    originalPrice: 13999,
+    rating: 4.3,
+    reviewCount: 942,
+    image: "https://m.media-amazon.com/images/I/71oQPS-8moL._SX522_.jpg",
+    category: "Travel & Luggage",
+    link: "https://www.amazon.in/MOKOBARA-Transit-Luggage-Polycarbonate-Hardshell/dp/B0DDTRDQ1L/",
+  },
+  {
+    id: "2",
+    name: "Favourite Outer Lid Non-Induction Aluminium Pressure Cooker 5 Litre",
+    brand: "Pigeon by Stovekraft",
+    price: 899,
+    originalPrice: 1995,
+    rating: 4.1,
+    reviewCount: 156432,
+    image: "https://m.media-amazon.com/images/I/61Y8SkzXDpL._SL1500_.jpg",
+    category: "Kitchen & Home",
+    link: "https://www.amazon.in/Pigeon-Favourite-Induction-Aluminium-Pressure/dp/B00VK5MCMI",
+  },
+  {
+    id: "3",
+    name: "Men's Stylish Button Down Comfortable Breathable Casual Shirt",
+    brand: "DEELMO",
+    price: 449,
+    originalPrice: 1499,
+    rating: 3.9,
+    reviewCount: 2847,
+    image: "https://m.media-amazon.com/images/I/61Kj0vvMWZL._SY741_.jpg",
+    category: "Men's Fashion",
+    link: "https://www.amazon.in/DEELMO-Stylish-Button-Down-Comfortable-Breathable/dp/B0FXRRV8W2",
+  },
+];
