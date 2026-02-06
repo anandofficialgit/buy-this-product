@@ -21,7 +21,7 @@ export default defineConfig(({ mode }) => {
   }
   
   return {
-    base: "/product-showcase-hub/",
+    base: "/",
     server: {
       host: "::",
       port: 8080,
