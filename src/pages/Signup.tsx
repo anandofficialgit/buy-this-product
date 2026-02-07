@@ -14,7 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { saveUser } from "@/lib/userStorage";
+import { apiService } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 
@@ -46,25 +46,34 @@ const Signup = () => {
   const onSubmit = async (data: SignupFormData) => {
     setIsSubmitting(true);
     
-    const success = saveUser({
-      name: data.name,
-      mobileNumber: data.mobileNumber,
-      username: data.username,
-      password: data.password,
-    });
-
-    setIsSubmitting(false);
-
-    if (success) {
-      toast({
-        title: "Account created successfully!",
-        description: "You can now login with your credentials.",
+    try {
+      const response = await apiService.signup({
+        name: data.name,
+        mobileNumber: data.mobileNumber,
+        username: data.username,
+        password: data.password,
       });
-      navigate("/login");
-    } else {
+
+      setIsSubmitting(false);
+
+      if (response.success) {
+        toast({
+          title: "Account created successfully!",
+          description: "You can now login with your credentials.",
+        });
+        navigate("/login");
+      } else {
+        toast({
+          title: "Registration failed",
+          description: response.message || "Username or mobile number already exists. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      setIsSubmitting(false);
       toast({
         title: "Registration failed",
-        description: "Username or mobile number already exists. Please try again.",
+        description: "An error occurred. Please try again later.",
         variant: "destructive",
       });
     }

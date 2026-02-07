@@ -14,7 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { verifyUser } from "@/lib/userStorage";
+import { apiService } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 
@@ -41,26 +41,38 @@ const Login = () => {
   const onSubmit = async (data: LoginFormData) => {
     setIsSubmitting(true);
     
-    const user = verifyUser(data.username, data.password);
-
-    setIsSubmitting(false);
-
-    if (user) {
-      // Store logged in user info (in production, use proper auth tokens)
-      localStorage.setItem("currentUser", JSON.stringify({
-        username: user.username,
-        name: user.name,
-      }));
-      
-      toast({
-        title: "Login successful!",
-        description: `Welcome back, ${user.name}!`,
+    try {
+      const response = await apiService.login({
+        username: data.username,
+        password: data.password,
       });
-      navigate("/");
-    } else {
+
+      setIsSubmitting(false);
+
+      if (response.success && response.data) {
+        // Store logged in user info (in production, use proper auth tokens)
+        localStorage.setItem("currentUser", JSON.stringify({
+          username: response.data.username,
+          name: response.data.name,
+        }));
+        
+        toast({
+          title: "Login successful!",
+          description: `Welcome back, ${response.data.name}!`,
+        });
+        navigate("/");
+      } else {
+        toast({
+          title: "Login failed",
+          description: response.message || "Invalid username or password. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      setIsSubmitting(false);
       toast({
         title: "Login failed",
-        description: "Invalid username or password. Please try again.",
+        description: "An error occurred. Please try again later.",
         variant: "destructive",
       });
     }

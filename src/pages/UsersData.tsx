@@ -8,24 +8,55 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getUsers, downloadUsersAsFile, type User } from "@/lib/userStorage";
+import { apiService, type User } from "@/lib/api";
 import Header from "@/components/Header";
 import { Download, Eye, EyeOff } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const UsersData = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [showPasswords, setShowPasswords] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
   useEffect(() => {
-    const loadUsers = () => {
-      const allUsers = getUsers();
-      setUsers(allUsers);
+    const loadUsers = async () => {
+      setLoading(true);
+      try {
+        const response = await apiService.getAllUsers();
+        if (response.success && response.data) {
+          setUsers(response.data);
+        } else {
+          toast({
+            title: "Error",
+            description: response.message || "Failed to load users",
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to load users. Please try again later.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
     };
     loadUsers();
-  }, []);
+  }, [toast]);
 
   const handleDownload = () => {
-    downloadUsersAsFile();
+    const jsonData = JSON.stringify(users, null, 2);
+    const blob = new Blob([jsonData], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "users_data.json";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -39,7 +70,7 @@ const UsersData = () => {
                 <div>
                   <CardTitle>Users Data</CardTitle>
                   <CardDescription>
-                    View and download user credentials stored in localStorage
+                    View and download user credentials stored on the server
                   </CardDescription>
                 </div>
                 <div className="flex gap-2">
@@ -68,9 +99,13 @@ const UsersData = () => {
               </div>
             </CardHeader>
             <CardContent>
-              {users.length === 0 ? (
+              {loading ? (
                 <div className="text-center py-8 text-muted-foreground">
-                  <p>No users found in storage.</p>
+                  <p>Loading users...</p>
+                </div>
+              ) : users.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <p>No users found.</p>
                   <p className="text-sm mt-2">
                     <Link to="/signup" className="text-primary hover:underline">
                       Create an account
@@ -103,8 +138,13 @@ const UsersData = () => {
                             <div>
                               <p className="text-sm font-medium text-muted-foreground">Password</p>
                               <p className="text-base font-mono">
-                                {showPasswords ? user.password : "••••••"}
+                                {showPasswords && user.password ? user.password : "••••••"}
                               </p>
+                              {!user.password && (
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  (Password not available from API)
+                                </p>
+                              )}
                             </div>
                           </div>
                         </CardContent>
@@ -123,22 +163,19 @@ const UsersData = () => {
             <CardContent>
               <div className="space-y-2 text-sm">
                 <p>
-                  <strong>Storage Location:</strong> Browser localStorage
+                  <strong>Storage Location:</strong> Server-side JSON file
                 </p>
                 <p>
-                  <strong>Storage Key:</strong> <code className="bg-secondary px-2 py-1 rounded">users_data</code>
+                  <strong>File Path:</strong> <code className="bg-secondary px-2 py-1 rounded">backend/data/users.json</code>
                 </p>
                 <p>
-                  <strong>How to Access:</strong>
+                  <strong>API Endpoint:</strong> <code className="bg-secondary px-2 py-1 rounded">http://localhost:8081/api/users</code>
                 </p>
-                <ol className="list-decimal list-inside space-y-1 ml-4 text-muted-foreground">
-                  <li>Open Browser Developer Tools (F12)</li>
-                  <li>Go to "Application" tab (Chrome) or "Storage" tab (Firefox)</li>
-                  <li>Click on "Local Storage" → your domain</li>
-                  <li>Look for key: <code className="bg-secondary px-1 py-0.5 rounded">users_data</code></li>
-                </ol>
+                <p>
+                  <strong>Backend:</strong> Java Spring Boot application running on port 8081
+                </p>
                 <p className="pt-2">
-                  <strong>Note:</strong> Data is stored locally in your browser. To save it as a file, click "Download JSON" above.
+                  <strong>Note:</strong> Data is stored in a JSON file on the server. Passwords are not returned by the API for security. To download the data, click "Download JSON" above.
                 </p>
               </div>
             </CardContent>

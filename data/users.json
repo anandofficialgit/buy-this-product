@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Test User",
+    "mobileNumber": "9876543210",
+    "username": "testuser",
+    "password": "password123",
+    "createdAt": "2026-02-07T12:57:57.122Z"
+  },
+  {
+    "name": "user one",
+    "mobileNumber": "9879999999",
+    "username": "userone",
+    "password": "userone",
+    "createdAt": "2026-02-07T12:58:46.867Z"
+  },
+  {
+    "name": "user one1",
+    "mobileNumber": "7777777777",
+    "username": "userone1",
+    "password": "userone1",
+    "createdAt": "2026-02-07T13:00:07.771Z"
+  }
+]
