@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { apiService, type User } from "@/lib/api";
+import { apiService } from "@/lib/apiService";
 import Header from "@/components/Header";
 import { Download, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";

@@ -7,6 +7,7 @@ export interface User {
   mobileNumber: string;
   username: string;
   password?: string; // Optional for responses
+  createdAt?: string; // Optional for responses
 }
 
 export interface ApiResponse<T> {

@@ -14,7 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { apiService } from "@/lib/api";
+import { apiService } from "@/lib/apiService";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 
