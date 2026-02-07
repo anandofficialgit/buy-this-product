@@ -5,7 +5,7 @@ import { clientApiService } from './clientApi';
 
 // Check if we're in production (GitHub Pages) or development
 const isProduction = import.meta.env.PROD;
-const hasBackend = !isProduction && window.location.hostname === 'localhost';
+const hasBackend = !isProduction && typeof window !== 'undefined' && window.location.hostname === 'localhost';
 
 // Create a unified API service interface
 interface ApiServiceInterface {
